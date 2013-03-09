@@ -13,8 +13,7 @@ release tags appended to the base module name.
 ```js
 var installall = require('installall')
 installall('levelup', function (err, modules) {
-  if (err) return console.log(err)
-  console.log(modules)
+  console.log(err || modules)
 })
 ```
 
