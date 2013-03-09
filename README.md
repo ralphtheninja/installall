@@ -8,14 +8,13 @@ published versions against each other and not just the latest released versus th
 ## Usage
 
 Just require and install. The resulting array will give you the install path for each module which have their
-release tags appended to the base module name. You should be able to call ```require(
+release tags appended to the base module name.
 
 ```js
-var install = require('installall')
-
-install('levelup', function (err, result) {
+var installall = require('installall')
+installall('levelup', function (err, modules) {
   if (err) return console.log(err)
-  console.log(result)
+  console.log(modules)
 })
 ```
 
@@ -26,76 +25,33 @@ Gives the following output:
     status: 'installed' },
   { path: '/home/magnus/src/installall/node_modules/levelup@0.0.0-1',
     status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.2a',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.2',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.2-1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.3',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.4',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.5',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.5-1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.1.0',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.1.1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.1.2',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.2.0',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.2.1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.3.0',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.3.1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.3.2',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.3.3',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.4.0',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.4.1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.4.2',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.4.3',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.4.4',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.5.0-1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.5.1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.5.2',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.5.3',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.5.3-1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.5.4',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.6.0-rc1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.6.0',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.6.1',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.6.2',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.7.0-b00',
-    status: 'installed' },
+    ...
   { path: '/home/magnus/src/installall/node_modules/levelup@0.7.0-b01',
     status: 'installed' },
   { path: '/home/magnus/src/installall/node_modules/levelup@0.7.0-b02',
     status: 'installed' } ]
+```
+
+The ```status``` property for each module is set to either ```installed``` or ```failed```.
+
+A little more useful scenario than just printing out all the modules is to try and require each of them to perform some tests like benchmarks or just simple sanity checks to make sure that everything can be installed and loaded without problems:
+
+```js
+var installall = require('installall')
+installall('somemodule', function (err, modules) {
+  modules.forEach(function (module) {
+    if (module.status == 'installed') {
+      try {
+        var foo = require(module.path)
+        // Do stuff with foo ..
+      } catch (err) {
+        console.log('Failed to require', module.path)
+      }
+    } else {
+      console.log('Failed to install', module.path)
+    }
+  })
+})
 ```
 
 ## Installation
@@ -103,3 +59,7 @@ Gives the following output:
 ```bash
 npm install installall
 ```
+
+## Licence
+
+MIT
