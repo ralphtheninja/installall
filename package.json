@@ -1,0 +1,28 @@
+{
+    "name": "installall"
+  , "description": "Download and install all published versions of a npm module"
+  , "keywords": [
+        "download"
+      , "install"
+      , "module"
+      , "npm"
+    ]
+  , "version": "0.0.0"
+  , "author": "Lars-Magnus Skog <lars.magnus.skog@gmail.com>"
+  , "repository": {
+        "url": "git://github.com/ralphtheninja/module-history.git"
+    }
+  , "main": "index.js"
+  , "scripts": {
+        "test": "tap ./test"
+    }
+  , "dependencies": {
+        "npm": "~1.2.14"
+      , "rimraf": "~2.1.4"
+      , "async": "~0.2.6"
+    }
+  , "devDependencies": {
+        "tap": "~0.4.0"
+    }
+  , "license": "MIT"
+}
