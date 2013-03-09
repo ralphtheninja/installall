@@ -32,7 +32,7 @@ module.exports = function (module, callback) {
     var target = path.join(modulesFolder(), version)
     fs.exists(target, function (exists) {
       if (exists) {
-        installed.push({ path: target, status: 'noop'})
+        installed.push({ path: target, status: 'installed'})
         return callback(null)
       }
       console.log('\n============== INSTALLING (%s) ==============\n', version)
