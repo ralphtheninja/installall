@@ -12,7 +12,7 @@ release tags appended to the base module name.
 
 ```js
 var installall = require('installall')
-installall('levelup', function (err, modules) {
+installall('levelup', '/tmp/foo', function (err, modules) {
   console.log(err || modules)
 })
 ```
@@ -20,35 +20,20 @@ installall('levelup', function (err, modules) {
 Gives the following output:
 
 ```bash
-[ { path: '/home/magnus/src/installall/node_modules/levelup@0.0.0',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.0.0-1',
-    status: 'installed' },
+[ '/tmp/foo/levelup@0.0.0',
+  '/tmp/foo/levelup@0.0.0-1',
     ...
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.7.0-b01',
-    status: 'installed' },
-  { path: '/home/magnus/src/installall/node_modules/levelup@0.7.0-b02',
-    status: 'installed' } ]
+  '/tmp/foo/levelup@0.7.0' ]
 ```
-
-The ```status``` property for each module is set to either ```installed``` or ```failed```.
 
 A little more useful scenario than just printing out all the modules is to try and require each of them to perform some tests like benchmarks or just simple sanity checks to make sure that everything can be installed and loaded without problems:
 
 ```js
 var installall = require('installall')
-installall('somemodule', function (err, modules) {
-  modules.forEach(function (module) {
-    if (module.status == 'installed') {
-      try {
-        var foo = require(module.path)
-        // Do stuff with foo ..
-      } catch (err) {
-        console.log('Failed to require', module.path)
-      }
-    } else {
-      console.log('Failed to install', module.path)
-    }
+installall('somemodule', __dirname, function (err, modules) {
+  modules.forEach(function (path) {
+    var foo = require(path)
+    // Do stuff with foo ..
   })
 })
 ```
