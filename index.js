@@ -1,54 +1,59 @@
-var npm = require('npm')
+var npm    = require('npm')
 var rimraf = require('rimraf')
-var async = require('async')
-var fs = require('fs')
-var path = require('path')
+var async  = require('async')
+var fs     = require('fs')
+var path   = require('path')
+var mkdirp = require('mkdirp')
 
-module.exports = function (module, callback) {
-  callback = callback || console.log
+module.exports = function (module, targetDir, installedCb) {
+  installedCb = installedCb || function noOp() {}
+
+  mkdirp.sync(targetDir)
+  mkdirp.sync(modulesFolder())
 
   var installed = []
 
   npm.load({}, function (err, npm) {
-    if (err) return callback(err)
+    if (err) return installedCb(err)
     npm.commands.info([module], function (err, info) {
-      if (err) return callback(err)
+      if (err) return installedCb(err)
       rimraf.sync(downloadFolder())
       var blob = Object.keys(info)[0]
       var versions = info[blob].versions
       if (Array.isArray(versions)) {
         versions = versions.map(function (v) { return module + '@' + v})
         async.forEachSeries(versions, install, function (err) {
-          if (err) return callback(err)
-          callback(null, installed)
+          if (err) return installedCb(err)
+          installedCb(null, installed)
         })
       } else {
-        callback(new Error('Invalid format on npm meta data'))
+        installedCb(new Error('Invalid format on npm meta data'))
       }
     })
   })
 
   function install(version, callback) {
-    var target = path.join(modulesFolder(), version)
+    var target = path.join(targetDir, version)
     fs.exists(target, function (exists) {
       if (exists) {
-        installed.push({ path: target, status: 'installed'})
+        installed.push(target)
         return callback(null)
       }
       console.log('\n============== INSTALLING (%s) ==============\n', version)
       npm.commands.install([ version ], function (err) {
         if (err) {
-          installed.push({ path: target, status: 'failed'})
           callback(null)
         } else {
-          fs.renameSync(downloadFolder(), target)
-          installed.push({ path: target, status: 'installed'})
-          callback(null)
+          fs.rename(downloadFolder(), target, function (err) {
+            if (err) return callback(err)
+            installed.push(target)
+            callback(null)
+          })
         }
       })
     })
   }
 
   function downloadFolder() { return path.join(modulesFolder(), module) }
-  function modulesFolder() { return path.join(__dirname, '/node_modules/') }
+  function modulesFolder() { return path.join(process.cwd(), '/node_modules/') }
 }
