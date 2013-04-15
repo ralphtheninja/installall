@@ -21,7 +21,6 @@ module.exports = function (module, targetDir, installedCb) {
       var blob = Object.keys(info)[0]
       var versions = info[blob].versions
       if (Array.isArray(versions)) {
-        versions = versions.map(function (v) { return module + '@' + v})
         async.forEachSeries(versions, install, function (err) {
           if (err) return installedCb(err)
           installedCb(null, installed)
@@ -33,10 +32,11 @@ module.exports = function (module, targetDir, installedCb) {
   })
 
   function install(version, callback) {
-    var target = path.join(targetDir, version)
+    var moduleVersion = module + '@' + version
+    var target = path.join(targetDir, moduleVersion)
     fs.exists(target, function (exists) {
       if (exists) {
-        installed.push(target)
+        installed.push({ version: version, path: target})
         return callback(null)
       }
       console.log('\n============== INSTALLING (%s) ==============\n', version)
@@ -46,7 +46,7 @@ module.exports = function (module, targetDir, installedCb) {
         } else {
           fs.rename(downloadFolder(), target, function (err) {
             if (err) return callback(err)
-            installed.push(target)
+            installed.push({ version: version, path: target})
             callback(null)
           })
         }

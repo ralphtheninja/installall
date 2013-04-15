@@ -20,10 +20,10 @@ installall('levelup', '/tmp/foo', function (err, modules) {
 Gives the following output:
 
 ```bash
-[ '/tmp/foo/levelup@0.0.0',
-  '/tmp/foo/levelup@0.0.0-1',
+[ { version: '0.0.0', path: '/tmp/foo/levelup@0.0.0' },
+  { version: '0.0.0-1', path: '/tmp/foo/levelup@0.0.0-1' },
     ...
-  '/tmp/foo/levelup@0.7.0' ]
+  { version: '0.7.0', path: '/tmp/foo/levelup@0.7.0' } ]
 ```
 
 A little more useful scenario than just printing out all the modules is to try and require each of them to perform some tests like benchmarks or just simple sanity checks to make sure that everything can be installed and loaded without problems:
@@ -31,8 +31,8 @@ A little more useful scenario than just printing out all the modules is to try a
 ```js
 var installall = require('installall')
 installall('somemodule', __dirname, function (err, modules) {
-  modules.forEach(function (path) {
-    var foo = require(path)
+  modules.forEach(function (module) {
+    var foo = require(module.path)
     // Do stuff with foo ..
   })
 })
