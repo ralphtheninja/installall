@@ -1,9 +1,7 @@
 installall
 ==========
 
-Download and install all published versions of a npm module. This can be useful in e.g. CI or benchmark systems, for 
-example in [level-bench](https://github.com/ralphtheninja/level-bench), where we want to be able to benchmark all
-published versions against each other and not just the latest released versus the one currently developed.
+Download and install all published versions of a npm module.
 
 ## Usage
 
