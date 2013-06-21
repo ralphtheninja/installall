@@ -1,5 +1,7 @@
-installall
+#installall
 ==========
+
+[![Dependency Status](https://david-dm.org/ralphtheninja/installall.png)](https://david-dm.org/ralphtheninja/installall)
 
 Download and install all published versions of a npm module.
 
