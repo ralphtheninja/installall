@@ -1,5 +1,4 @@
 #installall
-==========
 
 [![Dependency Status](https://david-dm.org/ralphtheninja/installall.png)](https://david-dm.org/ralphtheninja/installall)
 
