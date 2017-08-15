@@ -1,5 +1,7 @@
 #installall
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ralphtheninja/installall.svg)](https://greenkeeper.io/)
+
 [![Dependency Status](https://david-dm.org/ralphtheninja/installall.png)](https://david-dm.org/ralphtheninja/installall)
 
 Download and install all published versions of a npm module.
