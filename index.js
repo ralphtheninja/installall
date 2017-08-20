@@ -1,12 +1,12 @@
-var npm    = require('npm')
+var npm = require('npm')
 var rimraf = require('rimraf')
-var async  = require('async')
-var fs     = require('fs')
-var path   = require('path')
+var async = require('async')
+var fs = require('fs')
+var path = require('path')
 var mkdirp = require('mkdirp')
 
 module.exports = function (module, targetDir, installedCb) {
-  installedCb = installedCb || function noOp() {}
+  installedCb = installedCb || function noOp () {}
 
   mkdirp.sync(targetDir)
   mkdirp.sync(modulesFolder())
@@ -31,29 +31,24 @@ module.exports = function (module, targetDir, installedCb) {
     })
   })
 
-  function install(version, callback) {
+  function install (version, callback) {
     var moduleVersion = module + '@' + version
     var target = path.join(targetDir, moduleVersion)
-    fs.exists(target, function (exists) {
-      if (exists) {
-        installed.push({ version: version, path: target})
-        return callback(null)
-      }
-      console.log('\n============== INSTALLING (%s) ==============\n', version)
-      npm.commands.install([ version ], function (err) {
-        if (err) {
-          callback(null)
-        } else {
-          fs.rename(downloadFolder(), target, function (err) {
-            if (err) return callback(err)
-            installed.push({ version: version, path: target})
-            callback(null)
-          })
-        }
+    if (fs.existsSync(target)) {
+      installed.push({ version: version, path: target })
+      return callback(null)
+    }
+    console.log('\n============== INSTALLING (%s) ==============\n', version)
+    npm.commands.install([ version ], function (err) {
+      if (err) return callback(null)
+      fs.rename(downloadFolder(), target, function (err) {
+        if (err) return callback(err)
+        installed.push({ version: version, path: target })
+        callback(null)
       })
     })
   }
 
-  function downloadFolder() { return path.join(modulesFolder(), module) }
-  function modulesFolder() { return path.join(process.cwd(), '/node_modules/') }
+  function downloadFolder () { return path.join(modulesFolder(), module) }
+  function modulesFolder () { return path.join(process.cwd(), '/node_modules/') }
 }
