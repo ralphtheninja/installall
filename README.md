@@ -1,8 +1,8 @@
-#installall
-
-[![Dependency Status](https://david-dm.org/ralphtheninja/installall.png)](https://david-dm.org/ralphtheninja/installall)
+# installall
 
 Download and install all published versions of a npm module.
+
+[![Dependency Status](https://david-dm.org/ralphtheninja/installall.png)](https://david-dm.org/ralphtheninja/installall) [![Build Status](https://travis-ci.org/ralphtheninja/installall.svg?branch=master)](https://travis-ci.org/ralphtheninja/installall)
 
 ## Usage
 
